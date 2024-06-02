@@ -1,0 +1,164 @@
+<html>
+    <canvas id="myCanvas" width="500" height="500" style="border:1px solid #000;">
+
+    </canvas>
+    <script>
+        class MyAsteroidClass {
+            MyContext;
+
+            MyDiameter;
+            MyColor;
+
+            MyXSpeed;
+            MyYSpeed;
+
+            MyXPosition;
+            MyYPosition;
+
+            constructor(_myContext, _myDiameter, _myColor, _myXSpeed, _myYSpeed, _myXPosition, _myYPosition) {
+                this.MyContext = _myContext;
+
+                this.MyDiameter = _myDiameter;
+                this.MyColor = _myColor;
+
+                this.MyXSpeed = _myXSpeed;
+                this.MyYSpeed = _myYSpeed;
+
+                this.MyXPosition = _myXPosition;
+                this.MyYPosition = _myYPosition;
+            }
+
+            MyChangeAsteroidSpeed(_myXSpeed, _myYSpeed) {
+                this.MyXSpeed = _myXSpeed;
+                this.MyYSpeed = _myYSpeed;
+            }
+
+            MyChangeAsteroidPosition() {
+                this.MyXPosition += this.MyXSpeed;
+                this.MyYPosition += this.MyYSpeed;
+
+                if (Math.abs(this.MyXPosition) >= 550 || Math.abs(this.MyYPosition) >= 550) {
+                    this.MyXPosition = Math.random() * 500;
+                    this.MyYPosition = 0;
+                }
+            }
+
+            MyDrawAsteroid() {
+                this.MyContext.beginPath();
+                this.MyContext.arc(this.MyXPosition, this.MyYPosition, this.MyDiameter/2, 0, 2 * Math.PI, false);
+                this.MyContext.fillStyle = this.MyColor;
+                this.MyContext.fill();
+            }
+        }
+
+        const MyShipControls = {
+            IsMovingUp: false,
+            IsMovingDown: false,
+            IsMovingRight: false,
+            IsMovingLeft: false,
+        }
+
+        const MyCanvas = document.getElementById("myCanvas");
+        const MyContext = myCanvas.getContext("2d");
+
+        const MyAsteroidsArray = [];
+
+        const MySpaceShip = new MyAsteroidClass
+        (
+            MyContext, 
+            25, 
+            "orange", 
+            1.5, 
+            1.5, 
+            250, 
+            400
+        );
+
+        function MyRandomNumber(_myMin, _myMax) {
+            return Math.random() * (_myMax - _myMin) + _myMin;
+        }
+
+        function MyCreateAsteroids() {
+            for (let i = 0; i < 10; i++) {
+                const myAsteroid = new MyAsteroidClass (
+                    MyContext, 
+                    MyRandomNumber(20, 80), 
+                    "grey", 
+                    MyRandomNumber(-0.5, 0.5), 
+                    MyRandomNumber(1, 2), 
+                    MyRandomNumber(0, 500), 
+                    0
+                );
+                MyAsteroidsArray.push(myAsteroid);
+            }
+        }
+
+        function MyGameLoop() {
+            console.log('game loop');
+
+            MyContext.clearRect(0,0,500,500);
+
+            MyContext.fillStyle = "black";
+            MyContext.fillRect(0, 0, 500, 500);
+
+            for (let i = 0; i < MyAsteroidsArray.length; i++) {
+                MyAsteroidsArray[i].MyChangeAsteroidPosition();
+                MyAsteroidsArray[i].MyDrawAsteroid();
+            }
+
+            if (MyShipControls.IsMovingDown === true) {
+                MySpaceShip.MyYPosition += MySpaceShip.MyYSpeed;
+            }
+            if (MyShipControls.IsMovingLeft === true) {
+                MySpaceShip.MyXPosition -= MySpaceShip.MyXSpeed;
+            }
+            if (MyShipControls.IsMovingRight === true) {
+                MySpaceShip.MyXPosition += MySpaceShip.MyXSpeed;
+            }
+            if (MyShipControls.IsMovingUp === true) {
+                MySpaceShip.MyYPosition -= MySpaceShip.MyYSpeed;
+            }
+
+            MySpaceShip.MyDrawAsteroid();
+
+            // Request the next frame
+            requestAnimationFrame(MyGameLoop);
+        }
+
+        MyCreateAsteroids();
+        requestAnimationFrame(MyGameLoop);
+
+        document.addEventListener('keydown', MyOnKeyDown);
+        document.addEventListener('keyup', MyOnKeyUp);
+
+        function MyOnKeyDown(event) {
+            if (event.code === "ArrowRight") {
+                MyShipControls.IsMovingRight = true;
+            }
+            if (event.code === "ArrowLeft") {
+                MyShipControls.IsMovingLeft = true;
+            }
+            if (event.code === "ArrowUp") {
+                MyShipControls.IsMovingUp = true;
+            }
+            if (event.code === "ArrowDown") {
+                MyShipControls.IsMovingDown = true;
+            }
+        }
+
+        function MyOnKeyUp(event) {
+            if (event.code === "ArrowRight") {
+                MyShipControls.IsMovingRight = false;
+            }
+            if (event.code === "ArrowLeft") {
+                MyShipControls.IsMovingLeft = false;
+            }
+            if (event.code === "ArrowUp") {
+                MyShipControls.IsMovingUp = false;
+            }
+            if (event.code === "ArrowDown") {
+                MyShipControls.IsMovingDown = false;
+            }
+        }
+    </script>
+</html>

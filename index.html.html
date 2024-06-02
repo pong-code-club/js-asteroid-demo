@@ -1,0 +1,219 @@
+<html style="background-color: rgb(255, 255, 255);">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins" />
+    <style>
+        .pushable {
+            position: relative;
+            border: none;
+            background: transparent;
+            padding: 0;
+            cursor: pointer;
+            outline-offset: 4px;
+            transition: filter 250ms;
+        }
+        .shadow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            background: hsl(0deg 0% 0% / 0.25);
+            will-change: transform;
+            transform: translateY(4px);
+            transition:
+                transform
+                600ms
+                cubic-bezier(.3, .7, .4, 1);
+        }
+        .edge {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            background: linear-gradient(
+                to left,
+                hsl(340deg 100% 16%) 0%,
+                hsl(340deg 100% 32%) 8%,
+                hsl(340deg 100% 32%) 92%,
+                hsl(340deg 100% 16%) 100%
+            );
+        }
+        .front {
+            display: block;
+            position: relative;
+            margin: auto;
+            padding: 10px 10px;
+            border-radius: 12px;
+            font-size: 1.25rem;
+            color: white;
+            background: hsl(345deg 100% 47%);
+            will-change: transform;
+            transform: translateY(-6px);
+            transition:
+                transform
+                600ms
+                cubic-bezier(.3, .7, .4, 1);
+        }
+        .pushable:hover {
+            filter: brightness(120%);
+        }
+        .pushable:hover .front {
+            transform: translateY(-8px);
+            transition:
+                transform
+                250ms
+                cubic-bezier(.3, .7, .4, 1.5);
+        }
+        .pushable:active .front {
+            transform: translateY(-2px);
+            transition: transform 34ms;
+        }
+        .pushable:hover .shadow {
+            transform: translateY(6px);
+            transition:
+                transform
+                250ms
+                cubic-bezier(.3, .7, .4, 1.5);
+        }
+        .pushable:active .shadow {
+            transform: translateY(1px);
+            transition: transform 34ms;
+        }
+        .pushable:focus:not(:focus-visible) {
+            outline: none;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 0px; /* Space between buttons */
+            padding: 0px; /* Padding around the grid */
+        }
+        .direction-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: hsl(0, 0%, 0%);
+            border: none;
+        }
+        .hidden-button {
+            visibility: hidden;
+            width: 50px;
+            height: 50px;
+        }
+        .streak {
+            width: 200px;
+            height: 200px;
+            background: rgb(229, 0, 61);
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .pad {
+            width: 505px;
+            height: 850px;
+            padding: 10px;
+            background-color: rgb(255, 255, 255);
+            border-radius: 35px;
+            box-shadow: 
+                0px 10px 0px rgb(15, 34, 30),
+                0px 3px 20px rgb(255, 141, 59) inset,
+                0px -3px 20px rgb(2, 36, 54) inset,  
+                0px 10px 15px rgb(15, 34, 30);
+            border: 2px solid rgb(146, 76, 0);
+        }
+        .screen {
+            border: 2px solid rgb(40, 74, 86);
+            border-radius: 15px;
+            box-shadow: 0px 0px 10px rgb(0, 217, 255);
+            background-color: rgb(0, 0, 0);
+        }
+        .controls-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+        }
+    </style>
+
+    <div class="pad">
+        <div>&nbsp;</div>
+        <canvas 
+            id="myCanvas"
+            class="screen"
+            width="500"
+            height="500"
+        >
+        </canvas>
+
+        <div>&nbsp;</div>
+
+        <div class="controls-container">
+            <div>
+                <button id="myHomeButton" class="pushable">
+                    <span class="shadow" style="border-radius: 120px;"></span>
+                    <span class="edge" style="border-radius: 120px;"></span>
+                    <span class="front" style="border-radius: 120px;">
+                        <img src="home.png" alt="Button Image" width="40" height="40" style="opacity: 75%;">
+                    </span>
+                </button>
+                &nbsp;
+                <button id="myPlayButton" class="pushable">
+                    <span class="shadow" style="border-radius: 120px;"></span>
+                    <span class="edge" style="border-radius: 120px;"></span>
+                    <span class="front" style="border-radius: 120px;">
+                        <img src="play.png" alt="Button Image" width="40" height="40" style="opacity: 75%;">
+                    </span>
+                </button>
+            </div>
+            <div class="grid">
+                <button class="hidden-button"></button>
+
+                <button class="pushable">
+                    <span class="shadow"></span>
+                    <span class="edge"></span>
+                    <span class="front" style="font-weight: 700; background: black;">
+                        <img src="arrow-top.png" alt="Button Image" width="40" height="40" style="opacity: 75%;">
+                    </span>
+                </button>
+                
+                <button class="hidden-button"></button>
+
+                <button class="pushable">
+                    <span class="shadow"></span>
+                    <span class="edge"></span>
+                    <span class="front" style="font-weight: 700; background: black;">
+                        <img src="arrow-left.png" alt="Button Image" width="40" height="40" style="opacity: 75%;">
+                    </span>
+                </button>
+
+                <button class="hidden-button"></button>
+                
+                <button class="pushable">
+                    <span class="shadow"></span>
+                    <span class="edge"></span>
+                    <span class="front" style="font-weight: 700; background: black;">
+                        <img src="arrow-right.png" alt="Button Image" width="40" height="40" style="opacity: 75%;">
+                    </span>
+                </button>
+
+                <button class="hidden-button"></button>
+
+                <button class="pushable">
+                    <span class="shadow"></span>
+                    <span class="edge"></span>
+                    <span class="front" style="font-weight: 700; background: black;">
+                        <img src="arrow-bottom.png" alt="Button Image" width="40" height="40" style="opacity: 75%;">
+                    </span>
+                </button>
+                <button class="hidden-button"></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="Classes.js"></script>
+    <script src="Utils.js"></script>
+    <script src="Constants.js"></script>
+    <script src="AsteroidGame.js"></script>
+</html>
